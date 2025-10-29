@@ -1,5 +1,5 @@
 """
-ASGI config for feature_selector project.
+ASGI config for Feature_Selector project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'feature_selector.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Feature_Selector.settings')
 
 application = get_asgi_application()
