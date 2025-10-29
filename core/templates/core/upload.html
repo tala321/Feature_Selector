@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>رفع ملف CSV</title>
+</head>
+<body>
+    <h2>📁 رفع ملف CSV</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">رفع</button>
+    </form>
+</body>
+</html>
