@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Genetic Algorithm Results</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2 class="mb-4">🧬 Genetic Algorithm Results</h2>
+
+    {% if results %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Dataset Name</th>
+                    <th>Selected Features</th>
+                    <th>Selected Count</th>
+                    <th>Selection Ratio</th>
+                    <th>Accuracy (%)</th>
+                    <th>Generations</th>
+                    <th>Population</th>
+                    <th>⏱️ Execution Time (s)</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result.dataset_name }}</td>
+                        <td>{{ result.selected_features }}</td>
+                        <td>{{ result.selected_count }}</td>
+                        <td>{{ result.selection_ratio }}</td>
+                        <td>{{ result.accuracy|floatformat:2 }}</td>
+                        <td>{{ result.num_generations }}</td>
+                        <td>{{ result.population_size }}</td>
+                        <td>{{ result.execution_time }}</td>
+                        <td>{{ result.created_at|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning">
+            ⚠️ No results available yet. Please run the algorithm first.
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% load custom_tags %}
+{% extends 'core/base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+  <h2 class="mb-4">Baseline Feature Selection Results</h2>
+
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Dataset Name</th>
+        <th>Method</th>
+        <th>Accuracy</th>
+        <th>Selected Features</th>
+        <th>Execution Time</th>
+        <th>Created At</th>
+        <th>Run Again</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+      <tr>
+        <td>{{ result.dataset_name }}</td>
+        <td>{{ result.method_name }}</td>
+        <td>{{ result.accuracy|floatformat:2 }}</td>
+        <td>{{ result.selected_features }}</td>
+        <td>{{ result.execution_time }} seconds</td>
+        <td>{{ result.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          {% with dataset=dataset_list|get_item:result.dataset_name %}
+            {% if dataset %}
+              <a href="{% url 'run_baseline' dataset.id %}" class="btn btn-sm btn-outline-primary">Run</a>
+            {% else %}
+              <span class="text-muted">Unavailable</span>
+            {% endif %}
+          {% endwith %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,5 +1,5 @@
 """
-WSGI config for Feature_Selector project.
+WSGI config for feature_selector project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Feature_Selector.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'feature_selector.settings')
 
 application = get_wsgi_application()
