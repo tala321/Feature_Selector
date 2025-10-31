@@ -1,70 +1,82 @@
-# Getting Started with Create React App
+# Feature_Selector
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A feature selection project using Genetic Algorithm to optimize model performance by reducing the number of input features without compromising accuracy.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+##  Project Overview
+
+- Applies a Genetic Algorithm to select the most relevant features from CSV datasets
+- Supports file uploads from local device or external URLs
+- Displays detailed results including selected features, selection ratio, generation count, execution time, and accuracy
+- Includes a comparison page between traditional methods and genetic selection
+- Stores results in a SQLite database
+
+---
+
+##  Technologies Used
+
+- Python & Django
+- Bootstrap 5
+- Pandas & Scikit-learn
+- HTML Templates
+- GitHub for collaboration and version control
+
+---
+
+##  Features
+
+### Data Upload
+- Upload CSV files from device or external link
+
+### Genetic Algorithm Execution
+- Automatically selects the target column as the last column in the dataset
+- (Optional) Manual target column selection can be added later
+
+### Results Display
+- Genetic results preview page with full details
+- Traditional methods preview page
+- Comparison page between both approaches
+
+---
+
+##  React Frontend (Optional)
+
+If you're using a React frontend, these scripts apply:
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000)
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Builds the app for production in the `build` folder
 
 ### `npm run eject`
+Removes Create React App configuration (irreversible)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📖 Usage Guide
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- The target column is automatically selected as the last column
+- The algorithm handles each data type independently
+- Textual data is not fully supported yet (under development)
+- Selected features that do not affect prediction accuracy are clearly displayed
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+##  Instructor Requirements (Implemented or Pending)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+-  Support for uploading from external URLs
+-  Documentation of target column selection method
+-  Clarification that each data type is handled independently
+-  Organized Git usage (commits, PRs, reviews, merges)
+-  API endpoints 
+-  Full documentation 
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+##  Project Structure
+Feature_Selector/ ├── core/ │   ├── models.py │   ├── views.py │   ├── genetic_selector.py │   ├── templates/ │   └── migrations/ ├── datasets/ ├── feature_selector/ │   └── settings.py ├── manage.py └── README.md
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
