@@ -1,0 +1,29 @@
+.text-type {
+  display: inline-block;
+  white-space: pre-wrap;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+.text-type__content {
+  display: inline-block;
+  min-width: 1ch;
+}
+
+.text-type__cursor {
+  margin-left: 0.25rem;
+  display: inline-block;
+  opacity: 1;
+  font-size: 1.5rem;
+  animation: blink 1s infinite;
+}
+
+.text-type__cursor--hidden {
+  display: none;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
