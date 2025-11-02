@@ -1,0 +1,153 @@
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --success-color: #4cc9f0;
+    --light-bg: #f8f9fa;
+}
+
+body {
+    background-color: var(--light-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.success-card {
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+}
+
+.success-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 2rem;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.btn-custom {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 0.5rem;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    min-width: 180px;
+    text-transform: capitalize;
+}
+
+.btn-secondary-custom {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-success-custom {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-secondary-custom:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-primary-custom:hover {
+    background-color: #3a56e4;
+    border-color: #3a56e4;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-success-custom:hover {
+    background-color: #3ab7e0;
+    border-color: #3ab7e0;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.file-info {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    text-align: left;
+    direction: ltr;
+}
+
+.file-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.file-details:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.file-details span:first-child {
+    font-weight: 600;
+    color: #555;
+}
+
+.file-details span:last-child {
+    color: #333;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.progress-container {
+    margin-top: 1.5rem;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 10px;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+@media (max-width: 576px) {
+    .success-card {
+        margin: 1rem;
+    }
+
+    .btn-custom {
+        display: block;
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    .success-header {
+        padding: 1.5rem;
+    }
+
+    .success-icon {
+        font-size: 3rem;
+    }
+}
