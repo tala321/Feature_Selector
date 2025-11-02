@@ -12,8 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 
 from .forms import DatasetForm
-from .models import Dataset, GAResult, BaselineResult
-from .genetic_selector import GeneticFeatureSelector
+from .models import Dataset, BaselineResult
 
 # الصفحة الرئيسية
 def home(request):
@@ -70,43 +69,6 @@ def preview_dataset(request):
     }
     return render(request, 'core/preview.html', context)
 
-# تشغيل الخوارزمية الجينية
-def run_genetic_algorithm(request, dataset_id):
-    dataset = Dataset.objects.get(id=dataset_id)
-    df = pd.read_csv(dataset.file.path)
-
-    target_col = request.POST.get('target_column') if request.method == 'POST' else df.columns[-1]
-
-    if GAResult.objects.filter(dataset_name=dataset.name).exists():
-        return redirect('genetic_preview')
-
-    for col in df.columns:
-        if df[col].dtype == 'object':
-            df[col] = LabelEncoder().fit_transform(df[col].astype(str))
-
-    X = df.drop(columns=[target_col]).values
-    y = df[target_col].values
-
-    start = time.time()
-    selector = GeneticFeatureSelector(X, y, population_size=10, generations=20)
-    best_chromosome, best_accuracy = selector.evolve()
-    end = time.time()
-
-    selected_features = [df.drop(columns=[target_col]).columns[i] for i, gene in enumerate(best_chromosome) if gene == 1]
-
-    GAResult.objects.create(
-        dataset_name=dataset.name,
-        selected_features=", ".join(selected_features),
-        accuracy=best_accuracy,
-        execution_time=round(end - start, 2),
-        num_generations=selector.generations,
-        population_size=selector.population_size,
-        selected_count=selector.selected_count,
-        selection_ratio=selector.selection_ratio
-    )
-
-    return redirect('genetic_preview')
-
 # تشغيل الطرق التقليدية
 def run_baseline_models(request, dataset_id):
     dataset = Dataset.objects.get(id=dataset_id)
@@ -152,19 +114,6 @@ def run_baseline_models(request, dataset_id):
 
     return redirect('baseline_preview')
 
-# عرض نتائج الجينية
-def genetic_preview(request):
-    results = GAResult.objects.all().order_by('-id')[:5]
-    for r in results:
-        r.selected_list = r.selected_features.split(', ')
-        try:
-            df = Dataset.objects.get(name=r.dataset_name)
-            columns = pd.read_csv(df.file.path).columns[:-1]
-            r.unselected_list = [col for col in columns if col not in r.selected_list]
-        except:
-            r.unselected_list = []
-    return render(request, 'core/genetic_preview.html', {'results': results})
-
 # عرض نتائج الطرق التقليدية
 def baseline_preview(request):
     results = BaselineResult.objects.all().order_by('-id')[:10]
@@ -173,12 +122,10 @@ def baseline_preview(request):
 # عرض صفحة المقارنة
 def comparison_view(request):
     latest_dataset = Dataset.objects.latest('id')
-    ga_result = GAResult.objects.filter(dataset_name=latest_dataset.name).last()
     baseline_results = BaselineResult.objects.filter(dataset_name=latest_dataset.name)
 
     context = {
         'dataset_name': latest_dataset.name,
-        'ga_result': ga_result,
         'baseline_results': baseline_results
     }
     return render(request, 'core/comparison.html', context)
@@ -210,29 +157,5 @@ def get_baseline_results(request):
             })
 
         return JsonResponse({'dataset': file_name, 'results': formatted})
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
-# API: نتائج الجينية
-def get_genetic_results(request):
-    file_name = request.GET.get('file')
-    if not file_name:
-        return JsonResponse({'error': 'Missing file name'}, status=400)
-
-    try:
-        result = GAResult.objects.filter(dataset_name=file_name).last()
-        if not result:
-            return JsonResponse({'error': 'No results found'}, status=404)
-
-        return JsonResponse({
-            'dataset': result.dataset_name,
-            'selectedFeatures': result.selected_features.split(', '),
-            'accuracy': round(result.accuracy, 4),
-            'executionTime': result.execution_time,
-            'generations': result.num_generations,
-            'populationSize': result.population_size,
-            'selectionRatio': result.selection_ratio,
-            'selectedCount': result.selected_count
-        })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
