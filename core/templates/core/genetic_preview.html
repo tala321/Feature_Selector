@@ -13,7 +13,8 @@
             <thead class="table-dark">
                 <tr>
                     <th>Dataset Name</th>
-                    <th>Selected Features</th> 
+                    <th>Selected Features</th>
+                    <th>Unselected Features</th>
                     <th>Selected Count</th>
                     <th>Selection Ratio</th>
                     <th>Accuracy (%)</th>
@@ -27,7 +28,20 @@
                 {% for result in results %}
                     <tr>
                         <td>{{ result.dataset_name }}</td>
-                        <td>{{ result.selected_features }}</td>
+                        <td>
+                            {% if result.selected_list %}
+                                <span class="text-success">{{ result.selected_list|join:", " }}</span>
+                            {% else %}
+                                <em>None</em>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if result.unselected_list %}
+                                <span class="text-muted">{{ result.unselected_list|join:", " }}</span>
+                            {% else %}
+                                <em>None</em>
+                            {% endif %}
+                        </td>
                         <td>{{ result.selected_count }}</td>
                         <td>{{ result.selection_ratio }}</td>
                         <td>{{ result.accuracy|floatformat:2 }}</td>

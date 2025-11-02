@@ -63,3 +63,29 @@ class GeneticFeatureSelector:
         self.selection_ratio = round(self.selected_count / self.n_features, 2)
 
         return best, self.best_accuracy
+
+
+def run_genetic_algorithm(data):
+    try:
+        headers = list(data[0].keys())
+        rows = [[float(row[h]) for h in headers] for row in data]
+
+        X = np.array([r[:-1] for r in rows])  
+        y = np.array([r[-1] for r in rows])  
+
+        selector = GeneticFeatureSelector(X, y)
+        best, accuracy = selector.evolve()
+
+        selected_features = [headers[i] for i, gene in enumerate(best) if gene == 1]
+        unselected_features = [headers[i] for i, gene in enumerate(best) if gene == 0]
+
+        return {
+            'selectedFeatures': selected_features,
+            'unselectedFeatures': unselected_features,
+            'accuracy': round(accuracy, 4),
+            'generations': selector.generations,
+            'populationSize': selector.population_size,
+            'selectionRatio': selector.selection_ratio
+        }
+    except Exception as e:
+        return {'error': str(e)}

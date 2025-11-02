@@ -5,18 +5,21 @@ import "./App.css";
 const App = () => {
   const [csvData, setCsvData] = useState([]);
   const [error, setError] = useState("");
-  const [isDragOver, setIsDragOver] = useState(false); // State for drag-over styling
-  const [fileName, setFileName] = useState(""); // New state for file name
-  const fileInputRef = useRef(null); // Ref for hidden file input
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [geneticResult, setGeneticResult] = useState(null); // نتيجة الخوارزمية
+  const fileInputRef = useRef(null);
 
   const handleFileUpload = (file) => {
     setError("");
+    setGeneticResult(null); 
+
     if (!file) {
       setError("No file selected");
       return;
     }
 
-    setFileName(file.name); // Set the file name
+    setFileName(file.name);
 
     const fileExtension = file.name.split(".").pop().toLowerCase();
     if (fileExtension !== "csv") {
@@ -37,23 +40,20 @@ const App = () => {
     });
   };
 
-  // Handle file input change
   const handleInputChange = (e) => {
     const file = e.target.files[0];
     handleFileUpload(file);
   };
 
-  // Drag and drop handlers
   const handleDragOver = (e) => {
-    e.preventDefault(); // Crucial to allow drop
-    e.stopPropagation(); // Prevent bubbling
+    e.preventDefault();
+    e.stopPropagation();
     setIsDragOver(true);
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // Only set false if leaving the drop zone entirely
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setIsDragOver(false);
     }
@@ -72,9 +72,24 @@ const App = () => {
     }
   };
 
-  // Handle drop zone click to open file dialog
   const handleDropZoneClick = () => {
-    fileInputRef.current.click(); // Trigger hidden file input
+    fileInputRef.current.click();
+  };
+
+  const handleRunGenetic = () => {
+    fetch("http://localhost:3001/run-genetic", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: csvData })
+    })
+      .then(res => res.json())
+      .then(result => {
+        setGeneticResult(result);
+      })
+      .catch(err => {
+        console.error(err);
+        setError("Failed to run genetic algorithm");
+      });
   };
 
   return (
@@ -89,44 +104,57 @@ const App = () => {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onClick={handleDropZoneClick} // Click to browse
+          onClick={handleDropZoneClick}
         >
           <p>Drag and drop your CSV file here, or click to browse</p>
         </div>
-        
-        {/* Hidden file input */}
+
         <input
           type="file"
           accept=".csv"
           onChange={handleInputChange}
           ref={fileInputRef}
-          style={{ display: "none" }} // Hidden
+          style={{ display: "none" }}
         />
-        
-        {/* Display selected file name */}
+
         {fileName && <p className="file-name">Selected file: {fileName}</p>}
-        
         {error && <p className="error">{error}</p>}
 
         {csvData.length > 0 && (
-          <table>
-            <thead>
-              <tr>
-                {Object.keys(csvData[0]).map((key) => (
-                  <th key={key}>{key}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {csvData.map((row, index) => (
-                <tr key={index}>
-                  {Object.values(row).map((value, i) => (
-                    <td key={i}>{value}</td>
+          <>
+            <table>
+              <thead>
+                <tr>
+                  {Object.keys(csvData[0]).map((key) => (
+                    <th key={key}>{key}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {csvData.map((row, index) => (
+                  <tr key={index}>
+                    {Object.values(row).map((value, i) => (
+                      <td key={i}>{value}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <button className="run-button" onClick={handleRunGenetic}>
+              Run Genetic Algorithm
+            </button>
+          </>
+        )}
+
+        {geneticResult && (
+          <div className="results">
+            <h3>Genetic Algorithm Results</h3>
+            <p><strong>Selected Features:</strong> {geneticResult.selectedFeatures.join(", ")}</p>
+            <p><strong>Accuracy:</strong> {geneticResult.accuracy}</p>
+            <p><strong>Generations:</strong> {geneticResult.generations}</p>
+            <p><strong>Population Size:</strong> {geneticResult.populationSize}</p>
+          </div>
         )}
       </main>
     </div>
@@ -134,4 +162,3 @@ const App = () => {
 };
 
 export default App;
-
