@@ -8,10 +8,19 @@ class DatasetAdmin(admin.ModelAdmin):
     readonly_fields = ['uploaded_at']
     ordering = ['-uploaded_at']
 
+
 @admin.register(GAResult)
 class GAResultAdmin(admin.ModelAdmin):
-    list_display = ['dataset_name', 'formatted_accuracy', 'formatted_execution_time', 'created_at']
-    search_fields = ['dataset_name']
+    list_display = [
+        'dataset_name',
+        'target_column',
+        'formatted_accuracy',
+        'formatted_execution_time',
+        'generations',
+        'population_size',
+        'created_at'
+    ]
+    search_fields = ['dataset_name', 'target_column']
     readonly_fields = ['created_at']
     ordering = ['-created_at']
 
@@ -23,9 +32,16 @@ class GAResultAdmin(admin.ModelAdmin):
         return f"{obj.execution_time:.2f} seconds"
     formatted_execution_time.short_description = "Execution Time"
 
+
 @admin.register(BaselineResult)
 class BaselineResultAdmin(admin.ModelAdmin):
-    list_display = ['dataset_name', 'method_name', 'formatted_accuracy', 'formatted_execution_time', 'created_at']
+    list_display = [
+        'dataset_name',
+        'method_name',
+        'formatted_accuracy',
+        'formatted_execution_time',
+        'created_at'
+    ]
     search_fields = ['dataset_name', 'method_name']
     readonly_fields = ['created_at']
     ordering = ['-created_at']

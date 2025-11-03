@@ -13,7 +13,9 @@
     <div class="d-grid gap-2 col-6 mx-auto">
         <a href="{% url 'upload_dataset' %}" class="btn btn-outline-secondary">Upload Another File</a>
         <a href="{% url 'preview_dataset' %}" class="btn btn-outline-primary">Preview Uploaded Data</a>
-        <a href="{% url 'traditional_results' %}" class="btn btn-outline-dark">Traditional Algorithm Results</a>
+        <a href="{% url 'baseline_preview' %}" class="btn btn-outline-dark">Traditional Algorithm Results</a>
+        <a href="{% url 'genetic_preview' %}" class="btn btn-outline-success">Genetic Algorithm Results</a>
+        <a href="{% url 'comparison_view' %}" class="btn btn-outline-warning">Compare All Methods</a>
     </div>
 
 </body>
