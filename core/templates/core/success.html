@@ -7,13 +7,12 @@
 </head>
 <body class="container mt-5 text-center">
 
-    <h2 class="mb-3">File Uploaded Successfully </h2>
+    <h2 class="mb-3">File Uploaded Successfully</h2>
     <p class="mb-4">You can now preview the data or view the algorithm results.</p>
 
     <div class="d-grid gap-2 col-6 mx-auto">
         <a href="{% url 'upload_dataset' %}" class="btn btn-outline-secondary">Upload Another File</a>
         <a href="{% url 'preview_dataset' %}" class="btn btn-outline-primary">Preview Uploaded Data</a>
-        <a href="{% url 'genetic_results' %}" class="btn btn-outline-success">Genetic Algorithm Results</a>
         <a href="{% url 'traditional_results' %}" class="btn btn-outline-dark">Traditional Algorithm Results</a>
     </div>
 
