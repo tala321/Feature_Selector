@@ -1,0 +1,115 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #cfe2ff, #dee2e6, #d1e7dd);
+    background-size: 300% 300%;
+    animation: gradientFlow 15s ease infinite;
+    color: #212529;
+  }
+
+  @keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .comparison-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.8s ease;
+  }
+
+  h2 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #0d6efd;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
+    animation: fadeInDown 0.8s ease;
+  }
+
+  .table th {
+    background-color: #0d6efd;
+    color: white;
+    text-align: center;
+  }
+
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #198754;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="comparison-container mt-5">
+  <h2>⚙️ Comparison of Feature Selection Methods</h2>
+  <p class="text-center mb-4">Dataset: <strong>{{ dataset_name }}</strong></p>
+
+  <div class="section-title">🧬 Genetic Algorithm Result</div>
+  <table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Accuracy</th>
+        <th>Selected Features</th>
+        <th>Execution Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ genetic_result.method_name }}</td>
+        <td>{{ genetic_result.accuracy|floatformat:2 }}</td>
+        <td>{{ genetic_result.selected_features|join:", " }}</td>
+        <td>{{ genetic_result.execution_time }} seconds</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">📋 Traditional Methods Results</div>
+  {% if baseline_results %}
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Accuracy</th>
+          <th>Selected Features</th>
+          <th>Execution Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in baseline_results %}
+        <tr>
+          <td>{{ result.method_name }}</td>
+          <td>{{ result.accuracy|floatformat:2 }}</td>
+          <td>{{ result.selected_features }}</td>
+          <td>{{ result.execution_time }} seconds</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-center text-muted">No baseline results found for this dataset.</p>
+  {% endif %}
+</div>
+{% endblock %}

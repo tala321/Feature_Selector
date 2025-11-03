@@ -69,7 +69,26 @@ def preview_dataset(request):
     }
     return render(request, 'core/preview.html', context)
 
+# تشغيل الخوارزمية الجينية (نموذج مبدئي)
+def run_genetic(request, dataset_id):
+    dataset = Dataset.objects.get(id=dataset_id)
+    target_col = request.POST.get('target_column') or dataset.file.name
+
+    data = {
+        "dataset": dataset.name,
+        "target_column": target_col,
+        "selected_features": ["feature1", "feature2", "feature3"],
+        "accuracy": 0.91,
+        "generations": 50,
+        "population_size": 100,
+        "irrelevant_features": ["featureX", "featureY"]
+    }
+    return JsonResponse(data)
+
 # تشغيل الطرق التقليدية
+from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.utils.multiclass import type_of_target
+
 def run_baseline_models(request, dataset_id):
     dataset = Dataset.objects.get(id=dataset_id)
     df = pd.read_csv(dataset.file.path)
@@ -86,10 +105,13 @@ def run_baseline_models(request, dataset_id):
     X = df.drop(columns=[target_col]).values
     y = df[target_col].values
 
+    label_type = type_of_target(y)
+    is_classification = label_type in ['binary', 'multiclass']
+
     methods = {
         'SelectKBest': SelectKBest(score_func=f_classif, k='all'),
         'PCA': PCA(n_components=min(3, X.shape[1])),
-        'RFE': RFE(estimator=LogisticRegression(), n_features_to_select=min(3, X.shape[1]))
+        'RFE': RFE(estimator=LogisticRegression() if is_classification else LinearRegression(), n_features_to_select=min(3, X.shape[1]))
     }
 
     for name, model in methods.items():
@@ -99,16 +121,23 @@ def run_baseline_models(request, dataset_id):
 
         if hasattr(model, 'get_support'):
             selected = df.drop(columns=[target_col]).columns[model.get_support()]
+            selected_X = X[:, model.get_support()]
         elif hasattr(model, 'components_'):
             selected = [f'PC{i+1}' for i in range(model.n_components)]
+            selected_X = model.transform(X)
         else:
             selected = []
+            selected_X = X
+
+        clf = LogisticRegression() if is_classification else LinearRegression()
+        clf.fit(selected_X, y)
+        accuracy = clf.score(selected_X, y)
 
         BaselineResult.objects.create(
             dataset_name=dataset.name,
             method_name=name,
             selected_features=", ".join(selected),
-            accuracy=round(model.score(X, y), 4),
+            accuracy=round(accuracy, 4),
             execution_time=round(end - start, 2)
         )
 
@@ -117,16 +146,29 @@ def run_baseline_models(request, dataset_id):
 # عرض نتائج الطرق التقليدية
 def baseline_preview(request):
     results = BaselineResult.objects.all().order_by('-id')[:10]
-    return render(request, 'core/baseline_preview.html', {'results': results})
+    dataset_list = Dataset.objects.all()
+    return render(request, 'core/baseline_preview.html', {
+        'results': results,
+        'dataset_list': {d.name: d for d in dataset_list}
+    })
 
 # عرض صفحة المقارنة
 def comparison_view(request):
     latest_dataset = Dataset.objects.latest('id')
     baseline_results = BaselineResult.objects.filter(dataset_name=latest_dataset.name)
 
+    # نتائج الجينية (نموذج مبدئي)
+    genetic_result = {
+        "selected_features": ["feature1", "feature2", "feature3"],
+        "accuracy": 0.91,
+        "execution_time": 0.05,
+        "method_name": "Genetic Algorithm"
+    }
+
     context = {
         'dataset_name': latest_dataset.name,
-        'baseline_results': baseline_results
+        'baseline_results': baseline_results,
+        'genetic_result': genetic_result
     }
     return render(request, 'core/comparison.html', context)
 
