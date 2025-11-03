@@ -7,7 +7,7 @@ const UploadSuccess = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/list_uploaded_files')
+    fetch('http://localhost:8000/api/uploaded-files/')
       .then(response => response.json())
       .then(data => {
         if (data.files && data.files.length > 0) {

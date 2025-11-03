@@ -10,7 +10,9 @@ from .views import (
     comparison_view,
     genetic_preview,
     get_baseline_results,
-    get_genetic_results
+    get_genetic_results,
+    upload_api,
+    list_uploaded_files,
 )
 
 urlpatterns = [
@@ -26,4 +28,6 @@ urlpatterns = [
     path('readme/', lambda request: render(request, 'core/readme.html'), name='readme'),
     path('results/traditional/', get_baseline_results, name='get_baseline_results'),
     path('results/genetic/', get_genetic_results, name='get_genetic_results'),
+    path('api/upload/', upload_api, name='upload_api'),
+    path('api/uploaded-files/', list_uploaded_files, name='list_uploaded_files'),
 ]

@@ -293,3 +293,49 @@ def get_baseline_results(request):
         return JsonResponse({'results': formatted})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import pandas as pd
+
+@csrf_exempt
+def upload_api(request):
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        if not file:
+            return JsonResponse({'error': 'No file uploaded'}, status=400)
+        
+        
+        df = pd.read_csv(file)
+        columns = list(df.columns)
+        return JsonResponse({'columns': columns})
+    
+    return JsonResponse({'error': 'Invalid request'}, status=405)
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import pandas as pd
+
+@csrf_exempt
+def upload_api(request):
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        if not file:
+            return JsonResponse({'error': 'No file uploaded'}, status=400)
+
+        try:
+            df = pd.read_csv(file)
+            columns = list(df.columns)
+            return JsonResponse({'columns': columns})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request'}, status=405)
+from django.http import JsonResponse
+import os
+
+def list_uploaded_files(request):
+    upload_dir = os.path.join('media', 'uploads')  # أو حسب مكان الملفات
+    try:
+        files = os.listdir(upload_dir)
+        return JsonResponse({'files': files})
+    except FileNotFoundError:
+        return JsonResponse({'files': []})
