@@ -332,10 +332,14 @@ def upload_api(request):
 from django.http import JsonResponse
 import os
 
+from django.http import JsonResponse
+import os
+
 def list_uploaded_files(request):
-    upload_dir = os.path.join('media', 'uploads')  
+    upload_dir = os.path.join('media', 'uploads')  # تأكدي من المسار الصحيح
     try:
         files = os.listdir(upload_dir)
+       
         return JsonResponse({'files': files})
     except FileNotFoundError:
         return JsonResponse({'files': []})
@@ -373,3 +377,23 @@ def upload_from_url(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request'}, status=405)
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
+
+
+
+@csrf_exempt
+def upload_file(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        uploaded_file = request.FILES['file']
+        upload_dir = os.path.join('media', 'uploads')
+        os.makedirs(upload_dir, exist_ok=True) 
+        fs = FileSystemStorage(location=upload_dir)
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        print(" File saved:", filename)
+        return JsonResponse({'message': 'File uploaded successfully'})
+    return JsonResponse({'error': 'No file uploaded'}, status=400)
+
+
+

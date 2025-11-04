@@ -12,8 +12,9 @@ from .views import (
     get_baseline_results,
     get_genetic_results,
     upload_api,
+    upload_file,
     list_uploaded_files,
-    upload_from_url,  
+    upload_from_url,
 )
 
 urlpatterns = [
@@ -29,7 +30,10 @@ urlpatterns = [
     path('readme/', lambda request: render(request, 'core/readme.html'), name='readme'),
     path('results/traditional/', get_baseline_results, name='get_baseline_results'),
     path('results/genetic/', get_genetic_results, name='get_genetic_results'),
-    path('api/upload/', upload_api, name='upload_api'),
+
+    # ✅ API endpoints
+    path('api/upload/', upload_file, name='upload_file'),
     path('api/uploaded-files/', list_uploaded_files, name='list_uploaded_files'),
-    path('api/upload-url/', upload_from_url, name='upload_from_url'),  # ← أضفنا المسار هنا
+    path('api/upload-url/', upload_from_url, name='upload_from_url'),
+    path('api/upload-django/', upload_api, name='upload_api'),  
 ]
