@@ -13,11 +13,12 @@ from .views import (
     get_genetic_results,
     upload_api,
     list_uploaded_files,
+    upload_from_url,  
 )
 
 urlpatterns = [
     path('', home, name='home'),
-    path('upload/', upload_dataset, name='upload_dataset'),
+    path('upload-django/', upload_dataset, name='upload_dataset'),
     path('upload/success/', lambda request: render(request, 'core/success.html'), name='upload_success'),
     path('preview/', preview_dataset, name='preview_dataset'),
     path('run-baseline/<int:dataset_id>/', run_baseline_models, name='run_baseline'),
@@ -30,4 +31,5 @@ urlpatterns = [
     path('results/genetic/', get_genetic_results, name='get_genetic_results'),
     path('api/upload/', upload_api, name='upload_api'),
     path('api/uploaded-files/', list_uploaded_files, name='list_uploaded_files'),
+    path('api/upload-url/', upload_from_url, name='upload_from_url'),  # ← أضفنا المسار هنا
 ]

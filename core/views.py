@@ -13,7 +13,7 @@ from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.multiclass import type_of_target
-
+import json
 from .forms import DatasetForm
 from .models import Dataset, BaselineResult, GAResult
 
@@ -333,9 +333,43 @@ from django.http import JsonResponse
 import os
 
 def list_uploaded_files(request):
-    upload_dir = os.path.join('media', 'uploads')  # أو حسب مكان الملفات
+    upload_dir = os.path.join('media', 'uploads')  
     try:
         files = os.listdir(upload_dir)
         return JsonResponse({'files': files})
     except FileNotFoundError:
         return JsonResponse({'files': []})
+    
+    import json
+import requests
+import tempfile
+import pandas as pd
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def upload_from_url(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            url = data.get('url')
+
+            if not url:
+                return JsonResponse({'error': 'Missing URL'}, status=400)
+
+            response = requests.get(url)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch file'}, status=400)
+
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp:
+                tmp.write(response.content)
+                tmp_path = tmp.name
+
+            df = pd.read_csv(tmp_path)
+            columns = list(df.columns)
+            return JsonResponse({'columns': columns})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request'}, status=405)
