@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: feature-selector
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn feature_selector.wsgi:application
-    plan: free
-    autoDeploy: true
