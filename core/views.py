@@ -395,5 +395,15 @@ def upload_file(request):
         return JsonResponse({'message': 'File uploaded successfully'})
     return JsonResponse({'error': 'No file uploaded'}, status=400)
 
+def preview_dataset(request):
+    try:
+        latest = Dataset.objects.latest('id')
+    except Dataset.DoesNotExist:
+        return render(request, 'core/preview.html', {
+            'error': 'لا يوجد بيانات بعد لعرضها'
+        })
+
+    df = pd.read_csv(latest.file.path)
+   
 
 
